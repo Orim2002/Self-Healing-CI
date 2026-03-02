@@ -1,0 +1,13 @@
+watchdog:
+  grace_period: 45
+  interval: 2
+  max_failures: 5
+
+services:
+  - name: payment-api
+    image: payment-api:v101
+    url: http://payment-api.your-domain.com/health
+
+  - name: auth-service
+    image: auth-service:v44
+    url: http://auth-service.your-domain.com/health
