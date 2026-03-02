@@ -1,15 +1,3 @@
-"""
-Health Watchdog — Self-Healing CI/CD Pipeline
-==============================================
-Monitors deployed services and triggers rollback on failure.
-
-Decision 2 thresholds (designed by you):
-  - Grace period:     45 seconds
-  - Check interval:   2 seconds
-  - Max failures:     5 consecutive
-  - Time to rollback: 45s + (5 × 2s) = 55 seconds
-"""
-
 import time
 import threading
 import requests
