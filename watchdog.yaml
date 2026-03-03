@@ -6,4 +6,4 @@ watchdog:
 services:
   - name: sample-app
     image: 767398080395.dkr.ecr.us-east-1.amazonaws.com/sample-app:latest
-    url: http://sample-app:8080/health
+    url: http://sample-app/health
