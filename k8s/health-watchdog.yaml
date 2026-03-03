@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: watchdog
-          image: YOUR_ECR_URL/health-watchdog:latest
+          image: 767398080395.dkr.ecr.us-east-1.amazonaws.com/health-watchdog:latest
           resources:
             requests:
               memory: "128Mi"
