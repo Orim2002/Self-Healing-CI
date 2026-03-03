@@ -20,7 +20,7 @@ load_dotenv()
 DEFAULT_THRESHOLDS = {
     "soak_minutes":    5,
     "min_requests":    100,
-    "max_error_rate":  0.001,   # 0.01%
+    "max_error_rate":  0.001
 }
 
 SCHEMA = """

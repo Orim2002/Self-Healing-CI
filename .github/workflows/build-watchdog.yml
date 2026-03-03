@@ -7,6 +7,7 @@ on:
       - "health_watchdog.py"
       - "rollback_engine.py"
       - "telegram_alerter.py"
+      - "build-registry.py"
       - "Dockerfile"
       - .github/workflows/build-watchdog.yml
       - k8s/health-watchdog.yaml
