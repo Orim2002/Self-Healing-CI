@@ -208,7 +208,9 @@ def update_build_metrics(
             SET    running_time = %(running_time)s,
                    requests     = %(requests)s,
                    error_rate   = %(error_rate)s,
-                   is_safe      = %(is_safe)s
+                   is_safe      = CASE
+                       WHEN is_safe = TRUE THEN TRUE
+                       ELSE %(is_safe)s
             WHERE  service = %(service)s
               AND  image   = %(image)s
             RETURNING *
