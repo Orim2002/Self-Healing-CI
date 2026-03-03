@@ -22,6 +22,14 @@ resource "aws_security_group" "rds_sg" {
     description = "PostgreSQL from Jenkins EC2"
   }
 
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["172.31.0.0/16"]
+    description = "PostgreSQL from VPC"
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
