@@ -146,7 +146,7 @@ def record_deployment(
     return record
 
 
-def get_last_safe_build(service: str, config: dict = None) -> dict | None:
+def get_last_safe_build(service: str, exclude_image : str = None, config: dict = None) -> dict | None:
     """
     Returns the most recent rollback-safe build for a given service.
     This is called by the Rollback Engine during an incident.
@@ -161,9 +161,10 @@ def get_last_safe_build(service: str, config: dict = None) -> dict | None:
             SELECT * FROM build_registry
             WHERE  service = %(service)s
               AND  is_safe  = TRUE
+              AND  image   != %(exclude_image)s
             ORDER BY created_at DESC
             LIMIT 1
-        """, {"service": service})
+        """, {"service": service, "exclude_image": exclude_image or ""})
 
         row = cur.fetchone()
         return dict(row) if row else None

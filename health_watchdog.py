@@ -158,7 +158,7 @@ def trigger_rollback(
     print(f"  Total requests: {total_requests:,}")
     print(f"  Total errors:   {total_errors:,}")
 
-    safe_build = get_last_safe_build(service)
+    safe_build = get_last_safe_build(service, exclude_image=failed_image)
 
     if safe_build:
         print(f"\nRollback target found:")
