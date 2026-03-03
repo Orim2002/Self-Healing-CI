@@ -39,6 +39,11 @@ pipeline {
 
                     def result = sh(
                         script: """
+DB_HOST=${env.DB_HOST} \
+DB_PASSWORD=${env.DB_PASSWORD} \
+DB_NAME=${env.DB_NAME} \
+DB_USER=${env.DB_USER} \
+DB_PORT=${env.DB_PORT} \
 python3 -c "
 from dotenv import load_dotenv
 load_dotenv()
