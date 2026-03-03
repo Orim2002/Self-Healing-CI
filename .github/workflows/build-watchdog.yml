@@ -34,5 +34,5 @@ jobs:
           ECR_URL="${{ steps.login-ecr.outputs.registry }}/health-watchdog"
           docker build -f Dockerfile -t $ECR_URL:${{ github.sha }} .
           docker push $ECR_URL:${{ github.sha }}
-          docker build -f Dockerfile.watchdog -t $ECR_URL:latest .
+          docker build -f Dockerfile -t $ECR_URL:latest .
           docker push $ECR_URL:latest
