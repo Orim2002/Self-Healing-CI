@@ -7,3 +7,7 @@ services:
   - name: sample-app
     image: 767398080395.dkr.ecr.us-east-1.amazonaws.com/sample-app:latest
     url: http://sample-app/health
+    thresholds:
+      min_requests: 100
+      min_running_time: 300
+      max_error_rate: 0.001

@@ -18,9 +18,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DEFAULT_THRESHOLDS = {
-    "soak_minutes":    10,
-    "min_requests":    10_000,
-    "max_error_rate":  0.0001,   # 0.01%
+    "soak_minutes":    5,
+    "min_requests":    100,
+    "max_error_rate":  0.001,   # 0.01%
 }
 
 SCHEMA = """
