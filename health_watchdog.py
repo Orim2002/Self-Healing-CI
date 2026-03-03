@@ -70,6 +70,7 @@ def watch_service(service: dict, watchdog_config: dict):
     start_time           = time.time()
     total_requests       = 0
     total_errors         = 0
+    baseline_requests = None
 
     print(f"\nWatching [{name}] | image: {image}")
     print(f"  URL: {url}")
@@ -91,7 +92,11 @@ def watch_service(service: dict, watchdog_config: dict):
         if health_data:
             consecutive_failures = 0
 
-            total_requests = health_data.get("total_requests", total_requests)
+            raw_requests = health_data.get("total_requests", 0)
+            if baseline_requests is None:
+                baseline_requests = raw_requests
+
+            total_requests = raw_requests - baseline_requests
             error_rate     = health_data.get("error_rate", 0.0)
             total_errors   = int(total_requests * error_rate)
 
