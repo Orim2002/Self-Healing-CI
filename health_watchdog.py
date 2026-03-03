@@ -106,13 +106,16 @@ def watch_service(service: dict, watchdog_config: dict):
                   f"{total_requests:,} reqs | "
                   f"{error_rate:.4%} err")
 
-            update_build_metrics(
-                service      = name,
-                image        = image,
-                running_time = elapsed_minutes,
-                requests     = total_requests,
-                error_rate   = error_rate,
-            )
+            try:
+                update_build_metrics(
+                    service      = name,
+                    image        = image,
+                    running_time = elapsed_minutes,
+                    requests     = total_requests,
+                    error_rate   = error_rate,
+                )
+            except Exception as e:
+                print(f"[{name}] DB update failed: {e}")
 
         else:
             consecutive_failures += 1
