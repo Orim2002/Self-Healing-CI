@@ -87,18 +87,3 @@ def trigger_rollback(
     except Exception as e:
         print(f"Error triggering Jenkins job: {e}")
         return False
-
-
-if __name__ == "__main__":
-    print("\nRollback Engine — Quick Test\n" + "─" * 40)
-
-    success = trigger_rollback(
-        service        = "payment-api",
-        failed_image   = "payment-api:v101",
-        failure_reason = "Health check failed 5 consecutive times",
-    )
-
-    if success:
-        print("\nRollback job triggered — check Jenkins dashboard!")
-    else:
-        print("\nFailed to trigger rollback — check Jenkins credentials")

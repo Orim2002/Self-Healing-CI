@@ -143,7 +143,7 @@ resource "aws_instance" "jenkins" {
     usermod -aG docker ubuntu
 
     apt install -y python3-pip libpq-dev
-    pip3 install psycopg2-binary
+    pip3 install pyyaml requests python-dotenv psycopg2-binary
 
     apt install -y unzip
 

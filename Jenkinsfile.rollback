@@ -39,16 +39,16 @@ pipeline {
 
                     def result = sh(
                         script: """
-                            python3 -c "
-                            from dotenv import load_dotenv
-                            load_dotenv()
-                            from build_registry import get_last_safe_build
-                            safe = get_last_safe_build('${params.SERVICE_NAME}')
-                            if safe:
-                                print(safe['image'])
-                            else:
-                                print('NOT_FOUND')
-                            "
+        python3 -c "
+        from dotenv import load_dotenv
+        load_dotenv()
+        from build_registry import get_last_safe_build
+        safe = get_last_safe_build('${params.SERVICE_NAME}')
+        if safe:
+            print(safe['image'])
+        else:
+            print('NOT_FOUND')
+        "
                         """,
                         returnStdout: true
                     ).trim()
@@ -105,18 +105,18 @@ pipeline {
                     echo "Sending Telegram alert..."
 
                     sh """
-                        python3 -c "
-                        from telegram_alerter import send_rollback_alert
-                        send_rollback_alert(
-                            service='${params.SERVICE_NAME}',
-                            failed_image='${params.FAILED_IMAGE}',
-                            safe_image='${env.SAFE_IMAGE}',
-                            reason='${params.FAILURE_REASON}',
-                            rollback_status='${env.ROLLBACK_STATUS}',
-                            failed_at='${params.FAILED_AT}',
-                            jenkins_url='${env.BUILD_URL}'
-                        )
-                        "
+        python3 -c "
+        from telegram_alerter import send_rollback_alert
+        send_rollback_alert(
+            service='${params.SERVICE_NAME}',
+            failed_image='${params.FAILED_IMAGE}',
+            safe_image='${env.SAFE_IMAGE}',
+            reason='${params.FAILURE_REASON}',
+            rollback_status='${env.ROLLBACK_STATUS}',
+            failed_at='${params.FAILED_AT}',
+            jenkins_url='${env.BUILD_URL}'
+        )
+        "
                     """
                 }
             }
@@ -130,18 +130,18 @@ pipeline {
         failure {
             echo "Rollback pipeline failed — manual intervention may be required"
             sh """
-                python3 -c "
-                from telegram_alerter import send_rollback_alert
-                send_rollback_alert(
-                    service='${params.SERVICE_NAME}',
-                    failed_image='${params.FAILED_IMAGE}',
-                    safe_image='${env.SAFE_IMAGE ?: 'unknown'}',
-                    reason='${params.FAILURE_REASON}',
-                    rollback_status='PIPELINE FAILED',
-                    failed_at='${params.FAILED_AT}',
-                    jenkins_url='${env.BUILD_URL}'
-                )
-                " || true
+    python3 -c "
+    from telegram_alerter import send_rollback_alert
+    send_rollback_alert(
+        service='${params.SERVICE_NAME}',
+        failed_image='${params.FAILED_IMAGE}',
+        safe_image='${env.SAFE_IMAGE ?: 'unknown'}',
+        reason='${params.FAILURE_REASON}',
+        rollback_status='PIPELINE FAILED',
+        failed_at='${params.FAILED_AT}',
+        jenkins_url='${env.BUILD_URL}'
+    )
+    " || true
             """
         }
     }

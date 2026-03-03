@@ -89,22 +89,3 @@ def send_no_safe_build_alert(service, failed_image) -> bool:
         "  3. Investigate why no safe build exists"
     )
     return send_message(message)
-
-
-if __name__ == "__main__":
-    print("\nTelegram Alerter - Quick Test\n" + "-" * 40)
-
-    send_rollback_alert(
-        service         = "payment-api",
-        failed_image    = "payment-api:v101",
-        safe_image      = "payment-api:v99",
-        reason          = "Health check failed 5 times | 503 on /api/checkout",
-        rollback_status = "SUCCESS",
-        failed_at       = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        jenkins_url     = "http://54.224.78.221:8080/job/rollback-engine/1/",
-        log_lines       = [
-            "[ERROR] Connection pool exhausted",
-            "[ERROR] Timeout after 30s on db.connect()",
-            "[FATAL] Service shutting down",
-        ],
-    )

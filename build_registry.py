@@ -221,34 +221,3 @@ def update_build_metrics(
         })
         row = cur.fetchone()
         return dict(row) if row else None
-
-
-if __name__ == "__main__":
-    print("\nBuild Registry — Quick Test\n" + "─" * 40)
-
-    # Simulate builds with different health profiles
-    test_builds = [
-        ("payment-api",  "payment-api:v99",       15,   12_500,   0.00005),
-        ("payment-api",  "payment-api:v100",       8,    9_800,   0.00003),
-        ("payment-api",  "payment-api:v101",       3,    1_200,   0.05000),
-        ("auth-service", "auth-service:v44",      12,   15_000,   0.00001),
-    ]
-    initialize_db()
-
-    print("\nRecording deployments:")
-    for build in test_builds:
-        record_deployment(*build)
-
-    print("\n Last safe build for payment-api:")
-    safe = get_last_safe_build("payment-api")
-    if safe:
-        print(f"  → {safe['image']} (recorded at {safe['created_at']})")
-    else:
-        print("  → No safe build found!")
-
-    print("\n Deployment history for payment-api:")
-    history = get_deployment_history("payment-api")
-    for h in history:
-        status = "SAFE" if h["is_safe"] else "NOT SAFE YET"
-        print(f"  {status} | {h['image']:30s} | {h['running_time']:3}min | "
-              f"{h['requests']:6,} reqs | {float(h['error_rate']):.4%} err")
