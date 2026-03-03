@@ -3,7 +3,7 @@ Build Registry — Self-Healing CI/CD Pipeline
 ============================================
 Tracks deployment health and identifies rollback-safe builds.
 
-Thresholds (designed by you):
+Thresholds:
   - Soak time:   10+ minutes
   - Requests:    10,000+ requests
   - Error rate:  < 0.01%
