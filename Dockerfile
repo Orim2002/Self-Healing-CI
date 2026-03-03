@@ -8,5 +8,6 @@ RUN pip install -r requirements.txt
 COPY health_watchdog.py .
 COPY rollback_engine.py .
 COPY telegram_alerter.py .
+COPY build_registry.py .
 
 CMD ["python", "health_watchdog.py"]
