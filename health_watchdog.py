@@ -95,6 +95,7 @@ def watch_service(service: dict, watchdog_config: dict):
             raw_requests = health_data.get("total_requests", 0)
             if baseline_requests is None:
                 baseline_requests = raw_requests
+                continue
 
             total_requests = max(0, raw_requests - baseline_requests)
             error_rate     = health_data.get("error_rate", 0.0)
