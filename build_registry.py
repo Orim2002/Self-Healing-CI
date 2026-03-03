@@ -211,6 +211,7 @@ def update_build_metrics(
                    is_safe      = CASE
                        WHEN is_safe = TRUE THEN TRUE
                        ELSE %(is_safe)s
+                   END
             WHERE  service = %(service)s
               AND  image   = %(image)s
             RETURNING *
