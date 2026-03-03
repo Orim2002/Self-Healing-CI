@@ -3,6 +3,11 @@ output "public_ip" {
   value       = aws_eip.jenkins.public_ip
 }
 
+output "private_ip" {
+  description = "Jenkins EC2 private IP"
+  value       = aws_instance.jenkins.private_ip
+}
+
 output "jenkins_url" {
   description = "Jenkins web UI URL"
   value       = "http://${aws_eip.jenkins.public_ip}:8080"

@@ -34,7 +34,7 @@ module "rds" {
   db_user        = var.db_user
   db_password    = var.db_password
   allowed_cidrs  = var.allowed_cidrs
-  jenkins_ip     = module.ec2.public_ip
+  jenkins_ip     = module.ec2.private_ip
 }
 
 module "eks" {
