@@ -9,6 +9,7 @@ on:
       - "telegram_alerter.py"
       - "Dockerfile"
       - .github/workflows/build-watchdog.yml
+      - k8s/health-watchdog.yaml
 
 jobs:
   build:
