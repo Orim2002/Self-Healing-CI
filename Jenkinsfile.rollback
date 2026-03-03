@@ -99,6 +99,14 @@ else:
                     if (rolloutStatus == 0) {
                         env.ROLLBACK_STATUS = "SUCCESS"
                         echo "Rollback verified — ${params.SERVICE_NAME} is running ${env.SAFE_IMAGE}"
+                        sh """
+                            sed -i 's|image: .*${params.SERVICE_NAME}.*|image: ${env.SAFE_IMAGE}|g' watchdog.yaml
+                            kubectl create configmap watchdog-config \
+                                --from-file=watchdog.yaml \
+                                --dry-run=client -o yaml | kubectl apply -f -
+                            kubectl rollout restart deployment/health-watchdog
+                            kubectl rollout status deployment/health-watchdog --timeout=2m
+                        """
                     } else {
                         env.ROLLBACK_STATUS = "FAILED"
                         error("Rollback failed — ${params.SERVICE_NAME} did not stabilize!")
