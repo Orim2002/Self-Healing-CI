@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-watchdog
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: health-watchdog
+  template:
+    metadata:
+      labels:
+        app: health-watchdog
+    spec:
+      containers:
+        - name: watchdog
+          image: YOUR_ECR_URL/health-watchdog:latest
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pipeline-secrets
+                  key: DB_HOST
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pipeline-secrets
+                  key: DB_PASSWORD
+            - name: JENKINS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pipeline-secrets
+                  key: JENKINS_URL
+            - name: JENKINS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: pipeline-secrets
+                  key: JENKINS_TOKEN
+          volumeMounts:
+            - name: watchdog-config
+              mountPath: /app/watchdog.yaml
+              subPath: watchdog.yaml
+      volumes:
+        - name: watchdog-config
+          configMap:
+            name: watchdog-config

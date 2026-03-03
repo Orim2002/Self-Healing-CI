@@ -4,11 +4,11 @@ import requests
 import yaml
 from datetime import datetime
 from dotenv import load_dotenv
-from build_registry import (
+from buid_registry import (
     update_build_metrics,
-    get_last_safe_build,
-    record_deployment
+    get_last_safe_build
 )
+from rollback_engine import trigger_rollback as execute_rollback
 
 load_dotenv()
 
@@ -32,20 +32,20 @@ def check_health(url: str, timeout: int = 5) -> dict | None:
         response = requests.get(url, timeout=timeout)
 
         if response.status_code == 200:
-            return response.json()
+            return response.json(), None
         else:
             print(f"Non-200 response: {response.status_code}")
-            return None
+            return None, f"HTTP {response.status_code} on {url}"
 
     except requests.exceptions.ConnectionError:
         print(f"Connection refused: {url}")
-        return None
+        return None, f"Connection refused - service is not running at {url}"
     except requests.exceptions.Timeout:
         print(f"Timeout after {timeout}s: {url}")
-        return None
+        return None, f"Timeout after {timeout}s - service is unresponsive"
     except Exception as e:
         print(f"Unexpected error: {e}")
-        return None
+        return None, f"Unexpected error: {e}"
 
 def watch_service(service: dict, watchdog_config: dict):
     """
@@ -86,7 +86,7 @@ def watch_service(service: dict, watchdog_config: dict):
 
         print(f"\n[{name}] T+{int(elapsed_seconds)}s | Checking {url}")
 
-        health_data = check_health(url)
+        health_data, failure_reason = check_health(url)
 
         if health_data:
             consecutive_failures = 0
@@ -123,6 +123,7 @@ def watch_service(service: dict, watchdog_config: dict):
                     elapsed_seconds  = elapsed_seconds,
                     total_requests   = total_requests,
                     total_errors     = total_errors,
+                    failure_reason   = failure_reason
                 )
                 return
 
@@ -134,6 +135,7 @@ def trigger_rollback(
     elapsed_seconds: float,
     total_requests:  int,
     total_errors:    int,
+    failure_reason:  str,
 ):
     """
     Called when a service fails max_failures consecutive health checks.
@@ -175,6 +177,7 @@ def trigger_rollback(
             print(f"   {key}: {value}")
 
         print(f"\nNext step: Rollback Engine will deploy {safe_build['image']}")
+        execute_rollback(service,failed_image, failure_reason)
         return failure_context
 
     else:
