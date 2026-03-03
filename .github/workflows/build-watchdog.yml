@@ -1,0 +1,33 @@
+name: Build Watchdog
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "health_watchdog.py"
+      - "rollback_engine.py"
+      - "telegram_alerter.py"
+      - "Dockerfile"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push
+        run: |
+          ECR_URL="${{ steps.login-ecr.outputs.registry }}/health-watchdog"
+          docker build -f Dockerfile.watchdog -t $ECR_URL:latest .
+          docker push $ECR_URL:latest

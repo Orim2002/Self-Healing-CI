@@ -4,7 +4,7 @@ import requests
 import yaml
 from datetime import datetime
 from dotenv import load_dotenv
-from buid_registry import (
+from build_registry import (
     update_build_metrics,
     get_last_safe_build
 )
