@@ -8,6 +8,7 @@ on:
       - "rollback_engine.py"
       - "telegram_alerter.py"
       - "Dockerfile"
+      - .github/workflows/build-watchdog.yml
 
 jobs:
   build:
