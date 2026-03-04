@@ -205,7 +205,7 @@ def update_build_metrics(
     with db_cursor(config) as cur:
         cur.execute("""
             UPDATE build_registry
-            SET    running_time = GREATEST(running_time, %(running_time)s),
+            SET running_time = GREATEST(running_time, %(running_time)s),
                 requests     = GREATEST(requests, %(requests)s),
                 error_rate   = %(error_rate)s,
                 is_safe      = CASE 
