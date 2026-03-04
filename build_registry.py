@@ -225,3 +225,14 @@ def update_build_metrics(
         })
         row = cur.fetchone()
         return dict(row) if row else None
+
+def get_build_metrics(service: str, image: str, config: dict = None) -> dict | None:
+    with db_cursor(config) as cur:
+        cur.execute("""
+            SELECT * FROM build_registry
+            WHERE service = %(service)s
+              AND image   = %(image)s
+            LIMIT 1
+        """, {"service": service, "image": image})
+        row = cur.fetchone()
+        return dict(row) if row else None

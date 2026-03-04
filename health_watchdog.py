@@ -5,6 +5,7 @@ import yaml
 from datetime import datetime
 from dotenv import load_dotenv
 from build_registry import (
+    get_build_metrics,
     update_build_metrics,
     get_last_safe_build
 )
@@ -95,12 +96,17 @@ def watch_service(service: dict, watchdog_config: dict):
             raw_requests = health_data.get("total_requests", 0)
             if baseline_requests is None:
                 baseline_requests = raw_requests
+                existing = get_build_metrics(name, image)
+                if existing:
+                    requests_offset = existing.get('requests', 0)
+                    runtime_offset = existing.get('running_time', 0)
                 continue
             if total_requests == 0 and elapsed_minutes == 0:
                 time.sleep(interval)
                 continue
 
-            total_requests = max(0, raw_requests - baseline_requests)
+            total_requests = max(0, raw_requests - baseline_requests) + requests_offset
+            elapsed_minutes = int(elapsed_seconds / 60) + runtime_offset
             error_rate     = health_data.get("error_rate", 0.0)
             total_errors   = int(total_requests * error_rate)
 
