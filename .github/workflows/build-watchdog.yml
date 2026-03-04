@@ -1,4 +1,4 @@
-name: Build Watchdog
+name: Build and Push Watchdog
 
 on:
   push:
