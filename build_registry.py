@@ -205,15 +205,15 @@ def update_build_metrics(
     with db_cursor(config) as cur:
         cur.execute("""
             UPDATE build_registry
-            SET    running_time = %(running_time)s,
-                   requests     = %(requests)s,
-                   error_rate   = %(error_rate)s,
-                   is_safe      = CASE
-                       WHEN is_safe = TRUE THEN TRUE
-                       ELSE %(is_safe)s
-                   END
+            SET    running_time = GREATEST(running_time, %(running_time)s),
+                requests     = GREATEST(requests, %(requests)s),
+                error_rate   = %(error_rate)s,
+                is_safe      = CASE 
+                    WHEN is_safe = TRUE THEN TRUE  
+                    ELSE %(is_safe)s 
+                END
             WHERE  service = %(service)s
-              AND  image   = %(image)s
+            AND  image   = %(image)s
             RETURNING *
         """, {
             "running_time": running_time,
